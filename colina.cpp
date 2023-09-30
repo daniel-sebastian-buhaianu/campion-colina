@@ -46,14 +46,13 @@ int main()
 				dr = mij;
 			}
 		}
-		
 
 		if (h[dr] == q)
 		{
 			poz_st = dr+1;
 		}
 
-		st = vf+1, dr = N;
+		st = vf, dr = N;
 
 		while (dr-st > 1)
 		{
@@ -101,4 +100,4 @@ int main()
 
 	return 0;
 }
-// scor 55
+// scor 85
