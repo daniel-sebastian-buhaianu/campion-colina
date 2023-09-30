@@ -100,4 +100,5 @@ int main()
 
 	return 0;
 }
-// scor 85
+// scor 85 - campion
+// scor 100 - pbinfo
