@@ -5,74 +5,40 @@
 
 using namespace std;
 
+int cb(int x, int v[], int st, int dr, int cresc);
+
 int main()
 {
-	ifstream fin("colina.in");
+	int N, M, i, h[NMAX], gasit, vf, q, poz_st, poz_dr;
 
-	int N, M, vf, i, h[NMAX], q, st, dr, mij, poz_st, poz_dr;
+	ifstream fin("colina.in");
 
 	fin >> N >> M;
 
-	for (vf = i = 0; i < N; i++)
+	for (gasit = i = 0; i < N; i++)
 	{
 		fin >> h[i];
 
-		if (i > 0 && vf == 0 && h[i] < h[i-1])
+		if (i > 0 && !gasit && h[i] < h[i-1])
 		{
 			vf = i-1;
+			gasit = 1;
+		}
+		else if (!gasit)
+		{
+			vf = i;
 		}
 	}
-
+	
 	ofstream fout("colina.out");
 
 	for (i = 0; i < M; i++)
 	{
 		fin >> q;
-
-		poz_st = poz_dr = -1;
-
-		st = -1, dr = vf+1;
-
-		while (dr-st > 1)
-		{
-			mij = st + (dr-st)/2;
-
-			if (h[mij] < q)
-			{
-				st = mij;
-			}
-			else
-			{
-				dr = mij;
-			}
-		}
-
-		if (h[dr] == q)
-		{
-			poz_st = dr+1;
-		}
-
-		st = vf, dr = N;
-
-		while (dr-st > 1)
-		{
-			mij = st + (dr-st)/2;
-
-			if (h[mij] > q)
-			{
-				st = mij;
-			}
-			else
-			{
-				dr = mij;
-			}
-		}
-
-		if (h[dr] == q)
-		{
-			poz_dr = dr+1;
-		}
-
+		
+		poz_st = cb(q, h, 0, vf, 1);
+		poz_dr = cb(q, h, vf+1, N-1, 0);
+			
 		if (poz_st < 0 && poz_dr < 0)
 		{
 			fout << "NU";
@@ -83,12 +49,12 @@ int main()
 
 			if (poz_st >= 0)
 			{
-				fout << ' ' << poz_st;
+				fout << ' ' << poz_st+1;
 			}
 
 			if (poz_dr >= 0)
 			{
-				fout << ' ' << poz_dr;
+				fout << ' ' << poz_dr+1;
 			}
 		}
 
@@ -100,5 +66,36 @@ int main()
 
 	return 0;
 }
-// scor 85 - campion
-// scor 100 - pbinfo
+
+// caut binar pe x in vectorul sortat v[] in intervalul [st, dr]
+// daca cresc == 0 => vectorul este sortat descrescator
+// daca cresc == 1 => vectorul este sortat crescator
+// returnez pozitia lui x in v[], daca am gasit sau -1 in caz contrar
+int cb(int x, int v[], int st, int dr, int cresc)
+{
+	int mij;
+
+	st--, dr++; 
+
+	while (dr-st > 1)
+	{
+		mij = st + (dr-st)/2;
+
+		if (v[mij] == x)
+		{
+			return mij;
+		}
+
+		if ((cresc && v[mij] > x) || (!cresc && v[mij] < x))
+		{
+			dr = mij;
+		}
+		else
+		{
+			st = mij;
+		}
+	}	
+
+	return -1;
+}
+// scor 100
